@@ -1,0 +1,17 @@
+Color histogram rad:
+	file:///C:/Users/jaksa/Downloads/E002.pdf
+Rad sa istim datasetom
+	https://arxiv.org/pdf/1506.08959.pdf
+dataset klasa1:
+	https://drive.google.com/drive/folders/18EunmjOJsbE5Lh9zA0cZ4wKV6Um46dkg
+	http://mmlab.ie.cuhk.edu.hk/datasets/comp_cars/instruction.txt
+dataset klasa2:
+	http://mi.eng.cam.ac.uk/research/projects/VideoRec/CamVid/
+	ftp://svr-ftp.eng.cam.ac.uk/pub/eccv/
+cite KERASS
+
+dodatni dataset:
+	https://www.gti.ssr.upm.es/data/Vehicle_database.html
+
+dataset 3:
+	ja slikao

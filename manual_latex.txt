@@ -1,0 +1,110 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper, margin=0.5in]{geometry}
+\usepackage{fancyvrb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
+\urlstyle{same}
+
+\setlength\parindent{0pt} %% Do not touch this
+
+%% -----------------------------
+%% TITLE
+%% -----------------------------
+\title{Vehicle detection in images using Neural Networks and Color Histogram features - Manual} %% Assignment Title
+
+\author{Jakša Jovičić\\ %% Student name
+\textsc{}
+}
+
+%%\date{\today} %% Change "\today" by another date manually
+%% -----------------------------
+%% -----------------------------
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+% \setlength{\droptitle}{-5em}    
+%% %%%%%%%%%%%%%%%%%%%%%%%%%
+\maketitle
+
+\section{Set-up}
+The code is written in Python 3.7, in Anaconda environment and the Spyder text editor. \\
+
+Non standard libraries used are: \\
+
+\begin{itemize}
+    \item scipy
+    \item opencv
+    \item keras
+    \item tensorflow
+\end{itemize}
+
+Tensorflow and keras are installed following the instruction on this site if you have a NVIDIA gpu: \\
+\href{https://www.pugetsystems.com/labs/hpc/The-Best-Way-to-Install-TensorFlow-with-GPU-Support-on-Windows-10-Without-Installing-CUDA-1187/?fbclid=IwAR2c0K0CFuTYm9mYOq2L2Di7pNvY3X7cPu7A9hWnqNaRQ5l-f5qpsUUlIMA}{The Best Way to Install TensorFlow with GPU Support on Windows 10 (Without Installing CUDA)} \\
+If not, keras and tensorflow are installed as any other library using pip install.
+
+\section{Data acquisition and cleaning}
+I used several datasets to train the model well: 
+\begin{enumerate}
+  \item \href{http://mmlab.ie.cuhk.edu.hk/datasets/comp_cars/index.html}{Comp\_cars dataset} 
+  \item \href{http://mi.eng.cam.ac.uk/research/projects/VideoRec/CamVid/}{Motion-based Segmentation and Recognition Dataset} 
+  \item \href{https://www.gti.ssr.upm.es/data/Vehicle_database.html}{Vehicle Image Database} 
+  \item Some pictures i took with my phone
+\end{enumerate}
+The first dataset contains a lot of images of cars together with the bounding boxes for each car, it has images of cars from five viewpoints, Front (F), Rear (R), Side (S), Front-Side (FS), Front-Side (RS). I made a function pictures\_from\_dataset1() in file data\_cleaning.py that goes through all images, crops them according to the labels, resizes them and puts R and F images in one folder and FS and RS images in another folder.\\
+
+
+The second dataset are two road camera videos, the function pictures\_from\_dataset2() in data\_cleaning.py goes through frames of both videos and extracts random subimages which are used as not-car class for classification and puts them in a single folder. I went through the result images and deleted some images that I don't want to be in not-car class by hand. \\
+
+The third dataset contains cropped images of cars from road camera videos from four different positions, as well as the not-car images from same angles. \\
+
+The fourth dataset is made from many pictures i took with my phone in different occasions, function pictures\_from\_dataset4() in data\_cleaning.py extracts random subimages from every image and puts them in one folder to be used for not-car class. \\
+
+So all that should be done is: 
+\begin{itemize}
+    \item Download all datasets
+    \item Put them in separate folders named dataset1-4 and all those folders in one folder which will be root
+    \item Run data\_cleaning.py with root = complete path to the root folder
+\end{itemize}
+
+\section{Feature extraction}
+Once the data\_cleaning.py has been run, the pictures have been extracted from all datasets and are ready for feature extraction. Function feature\_extraction\_all() in feature\_extraction.py goes through all folders with pictures and extracts the features and puts them in separate files for each class and each dataset. \\
+
+The features that are being used are bin-split color histograms of each image, 3 histograms with 256 elements are spit in 64 bins each and they are concatenated in one list that is used as the NN input.
+
+I found that the model works better when I don't use FS and RS features for training so they are not used. \\
+
+Function group\_features() in feature\_extraction.py groups all features from different folders in two files which will be used for training.\\
+
+So all that should be done is: \\
+\begin{itemize}
+    \item Chose which features you want to use for training (default is all except FS and RS)
+    \item Run feature\_extraction.py 
+\end{itemize}
+
+\section{Model training}
+
+Model is trained by running the training() function in feature\_extraction.py, it will create text files representing  the parameters of the trained network.
+
+\section{Testing}
+
+Python script test.py is used for model testing, it has functions image\_search\_full(), folder\_search() and video\_search() that do the whole processing on an image, a folder of images and a video.
+
+\section{Further work}
+
+\begin{itemize}
+    \item Add more data, datasets with more labeled car pictures from surveillance should make the model work a lot better, because my model is trained on images that are almost all from car shows and taken with professional cameras and not with road cameras.    
+    \item Combining this model with some other model could give better results
+    \item Make several models and a voting system for detection
+    \item Better search system e.g. prediction based on the previous frame for videos
+    \item Optimization, speed up
+    \item The system is highly dependant on decision threshold, so some kind of adaptive threshold could make the system work better
+\end{itemize}
+
+\end{document}
